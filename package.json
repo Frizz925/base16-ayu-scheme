@@ -1,0 +1,13 @@
+{
+  "name": "base16-ayu-schemes",
+  "version": "1.0.0",
+  "description": "Ayu colorschemes for base16",
+  "main": "index.js",
+  "repository": "https://github.com/Frizz925/base16-ayu-schemes",
+  "author": "Izra Faturrahman <Frizz925@hotmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "ayu": "^7.2.1"
+  }
+}
