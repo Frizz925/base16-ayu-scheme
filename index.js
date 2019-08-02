@@ -23,6 +23,7 @@ const colorMap = {
     '06': 'common.accent',
     '07': 'common.ui',
     '08': 'syntax.markup',
+    '09': 'syntax.error',
     '0A': 'syntax.special',
     '0B': 'syntax.string',
     '0C': 'syntax.regexp',
