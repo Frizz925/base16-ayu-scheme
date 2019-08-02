@@ -1,18 +1,12 @@
-if (process.argv.length < 4) {
-    console.error('Usage: index.js <color> <scheme-name>');
-    process.exit(1);
-}
-const colorName = process.argv[2];
-const schemeName = process.argv[3];
+const fs = require('fs');
+const { light, mirage, dark } = require('ayu');
 const author = 'Izra Faturrahman (https://github.com/Frizz925)';
 
-const ayu = require('ayu');
-if (!ayu.hasOwnProperty(colorName)) {
-    console.error('Unknown color ' + colorName);
-    process.exit(1);
-}
-const ayuColor = ayu[colorName];
-
+const colorsSchemes = {
+    'light': light,
+    'mirage': mirage,
+    'dark': dark,
+};
 const colorMap = {
     '00': 'common.bg',
     '01': 'ui.panel.bg',
@@ -44,15 +38,29 @@ function traverse(obj, query) {
     return obj;
 }
 
-console.log('scheme: "' + schemeName + '"');
-console.log('author: "' + author + '"');
-for (const key in colorMap) {
-    if (!colorMap.hasOwnProperty(key)) {
-        continue;
-    }
-    const query = colorMap[key];
-    const colorHex = traverse(ayuColor, query).hex()
-        .substring(1, 7)
-        .toUpperCase();
-    console.log('base' + key + ': "' + colorHex + '"');
-}
+Object.keys(colorsSchemes).forEach((name) => {
+    const scheme = colorsSchemes[name];
+    const schemeName = name.substring(0, 1).toUpperCase() + name.substring(1);
+    const outputMap = [
+        '',
+        ['scheme', 'Ayu-' + schemeName],
+        ['author', author],
+    ];
+    Object.keys(colorMap).forEach((key) => {
+        const query = colorMap[key];
+        const colorHex = traverse(scheme, query).hex()
+            .substring(1, 7)
+            .toUpperCase();
+        outputMap.push(['base' + key, colorHex]);
+    });
+    const output = outputMap.reduce((curry, map) => {
+        return curry + map[0] + ': "' + map[1] + '"\n'
+    });
+
+    const filename = 'ayu-' + name + '.yaml';
+    fs.writeFile(filename, output, (err) => {
+        if (err) {
+            console.error(err);
+        }
+    });
+});
